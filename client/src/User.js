@@ -4,40 +4,85 @@ import axios from 'axios';
 class User extends React.Component {
     state = {
         user: {},
-        posts: []
+        posts: [],
+        newPost: {
+            text: '',
+            user_id: ''
+        }
       }
     
       componentDidMount(){
         axios
-          .get('http://localhost:4000/api/posts')
+          .get(`http://localhost:4000/api/users/posts/${this.props.match.params.id}`)
           .then(res => {
             this.setState({
-              posts: res.data.posts.filter(x => `${x["user_id"]}` === `${this.props.match.params.id}`)
+                posts: res.data.posts
             })
             return axios.get(`http://localhost:4000/api/users/${this.props.match.params.id}`);
           })
           .then(res => {
               this.setState({
-                  user: res.data.user
+                  user: res.data.user,
+                  newPost: {
+                      text: '',
+                      user_id: res.data.user.id
+                  }
               })
           })
           .catch(err => console.log(err))
       }
 
+      changeHandler = e => {
+        const name = e.target.name;
+        const value = e.target.value;
+        this.setState(prevState => ({
+          newPost: {...prevState.newPost,
+            [name]: value
+          }
+        }))
+      }
+
+      addPost = e => {
+          e.preventDefault();
+          axios
+            .post('http://localhost:4000/api/posts', this.state.newPost)
+            .then(res => {
+                this.setState(prevState => ({
+                    posts: [...prevState.posts, res.data.post],
+                    newPost: {
+                        ...prevState.newPost,
+                        text: ''
+                    }
+                }))
+            })
+            .catch()
+      }
+
       render(){
         return (
             <div className='user'>
-            <h1>{this.state.user.name}</h1>
-            {this.state.posts.length > 0 &&
-            this.state.posts.map(post => {
-                return (
-                    <div className="post" key={post.user_id + post.id}>
-                    {post.text}
-                    </div>
-                );
-            })
-            }
-          </div>
+            <form onSubmit={this.addPost}>
+                <input 
+                    type="text" 
+                    placeholder="New post..." 
+                    name="text" 
+                    value={this.state.newPost.text} 
+                    onChange={this.changeHandler}
+                />
+            </form>
+                <h3>{this.state.user.name}</h3>
+                <div className="post-list">
+                    {this.state.posts.length > 0 &&
+                    this.state.posts.map(post => {
+                        return (
+                            <div className="post" key={post.postedBy + post.id}>
+                            <p>"{post.text}"</p>
+                            </div>
+                        );
+                    })
+                    }
+                </div>
+            </div>
         );
       }
 }
