@@ -81,7 +81,8 @@ router.put('/:id', capitalize, (req, res) => {
 });
 
 function capitalize(req, res, next){
-    req.body.name = req.body.name.toUpperCase();
+    const titleCased = req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
+    req.body.name = titleCased;
     next();
 }
 

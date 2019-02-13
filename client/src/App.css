@@ -1,0 +1,15 @@
+.App {
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;  
+  background-color: #282c34;
+  min-height: 100vh;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.App h1 {
+  font-size: 4rem;
+}
