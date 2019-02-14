@@ -9,7 +9,7 @@ class Users extends React.Component {
     
       componentDidMount(){
         axios
-          .get('http://localhost:4000/api/users')
+          .get('/api/users')
           .then(res => {
             this.setState({
               users: res.data.user

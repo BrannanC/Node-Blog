@@ -45,7 +45,7 @@ class User extends React.Component {
       addPost = e => {
           e.preventDefault();
           axios
-            .post('http://localhost:4000/api/posts', this.state.newPost)
+            .post('/api/posts', this.state.newPost)
             .then(res => {
                 this.setState(prevState => ({
                     posts: [...prevState.posts, res.data.post],
