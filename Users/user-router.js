@@ -1,6 +1,7 @@
 const express = require('express');
 
 const users = require('../data/helpers/userDb');
+const posts = require('../data/helpers/postDb');
 
 const router = express.Router();
 
@@ -60,18 +61,14 @@ router.post('/', capitalize, (req, res) => {
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', delPosts, (req, res) => {
     users
         .remove(req.params.id)
-        .then(isDel => {
-            isDel ?
-            res.status(204).end()
-            : res.status(404).json({ message: "The user with the specified ID does not exist." });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: "The user could not be removed" })
-        })
+        .then(isDel => res.status(204).end())
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: "The user could not be removed" })
+    })
 });
 
 router.put('/:id', capitalize, (req, res) => {
@@ -99,6 +96,13 @@ function capitalize(req, res, next){
     const titleCased = req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1);
     req.body.name = titleCased;
     next();
+}
+
+function delPosts(req, res, next){
+    posts
+        .removePosts(req.params.id)
+        .then(del => next())
+        .catch(err => res.json({ err }))
 }
 
 module.exports = router;
