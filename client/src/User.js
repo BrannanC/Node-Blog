@@ -58,6 +58,18 @@ class User extends React.Component {
             .catch()
       }
 
+      deletePost = (e, id) => {
+          e.preventDefault();
+          axios
+            .delete(`http://localhost:4000/api/posts/${id}`)
+            .then(res => {
+                this.setState(prevState => ({
+                    posts: prevState.posts.filter(x => x.id !== id)
+                }))
+            })
+            .catch(err => console.log(err))
+      }
+
       render(){
         return (
             <div className='user'>
@@ -75,8 +87,9 @@ class User extends React.Component {
                     {this.state.posts.length > 0 &&
                     this.state.posts.map(post => {
                         return (
-                            <div className="post" key={post.postedBy + post.id}>
+                            <div className="post" key={`${post.postedBy}${post.id}`}>
                             <p>"{post.text}"</p>
+                            <button onClick={e => this.deletePost(e, post.id)}>[X]</button>
                             </div>
                         );
                     })
