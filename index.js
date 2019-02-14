@@ -1,17 +1,31 @@
 const server = require ('./server');
 const express = require('express');
+const app = express();
 
 require('dotenv').config();
-server.use(express.static(path.join(__dirname, 'client/public')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 const port = process.env.PORT || 4000;
 
 const path = require('path')
-// Serve static files from the React frontend app
-server.use(express.static(path.join(__dirname, 'client/build')))
-// Anything that doesn't match the above, send back index.html
-server.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname + '/client/build/index.html'))
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+//production mode
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  //
+  app.get('*', (req, res) => {
+    res.sendfile(path.join(__dirname = 'client/build/index.html'));
+  })
+}
+//build mode
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/public/index.html'));
+})
+
+//start server
+app.listen(port, (req, res) => {
+  console.log( `server listening on port: ${port}`);
 })
 
 server.listen(port, () => {
