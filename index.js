@@ -2,7 +2,7 @@ const server = require ('./server');
 const express = require('express');
 
 require('dotenv').config();
-server.use(express.static(path.join(__dirname, 'client/build')));
+server.use(express.static(path.join(__dirname, 'client/public')));
 
 const port = process.env.PORT || 4000;
 
