@@ -13,6 +13,6 @@ server.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
 })
 
-server.listen(process.env.PORT, () => {
+server.listen(port, () => {
   console.log(`\n*** Server Running on http://localhost:4000 ***\n`);
 });
